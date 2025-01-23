@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome CDN for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>My Publications and Resume</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        header {
+            /* background-color: #3a3a3a;
+            color: #f0f0f0; */
+            text-align: center;
+            padding: 1.5rem;
+            /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+        }
+
+        main {
+            padding: 1.5rem;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        h2 {
+            color: #3a3a3a;
+            border-bottom: 2px solid #bbb;
+            padding-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+        .info-box {
+            background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
+            border-radius: 15px; /* Curved corners */
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light shadow */
+            max-width: 600px; /* Adjust the width as needed */
+            margin: 20px auto; /* Center the box */
+            line-height: 1.6;
+        }
+        .news-box {
+            background-color: rgba(255, 255, 255, 0.3); /* 50% transparent white */
+            border-radius: 15px; /* Curved corners */
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light shadow */
+            max-width: 600px; /* Adjust the width as needed */
+            margin: 20px auto; /* Center the box */
+            line-height: 1.6;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            /* background-color: #f5f5f5; */
+            margin: 0.5rem 0;
+            /* padding: 1rem; */
+            /* border: 1px solid #ddd; */
+            border-radius: 8px;
+            /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+            transition: transform 0.2s;
+        }
+
+        li:hover {
+            transform: translateY(-3px);
+            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); */
+        }
+
+        a {
+            text-decoration: none;
+            color: #323030;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #1a73e8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #3a3a3a;
+            color: #f0f0f0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            font-size: 1rem;
+            color: #666;
+        }
+        img {
+            border-radius: 50%;
+            width: 200px;
+        }
+        .social-icons a:hover {
+            color: #1a73e8;
+        }
+
+    </style>
+</head>
+<body>
+<main>
+    <header>
+        <div class="header-content">
+            <img src="shayan-noei.jpg" alt="My Profile Picture">
+            <h3>Shayan Noei</h3>
+            <p>Postdoctoral Fellow, PhD, Queen's University</p>
+            <p>Email: s[dot]noei[at]queensu[dot]ca</p>
+            <p>Kingston, Canada</p>
+        </div>
+        <div class="social-icons">
+            <a href="https://linkedin.com/in/janedoe" target="_blank" title="LinkedIn">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://scholar.google.com/citations?user=janedoe" target="_blank" title="Google Scholar">
+                <i class="fas fa-graduation-cap"></i>
+            </a>
+        </div>
+        <div class="info-box">
+            <p>My research interests include code maintenance, code refactoring, code generation, LLM-driven development, and release engineering.  
+                <br>If you have an interesting idea or are looking to collaborate, feel free to reach out!</p>
+            
+        </div>
+    </header>
+    <section class="news-box">
+        <h2>News</h2>
+        <ul>
+            <li>
+                <strong>📜 January 14, 2025</strong><br>
+                <p>Our work titled <b><em>"An Empirical Study on Release-Wise Refactoring Patterns"</em></b> was accepted for The ACM International Conference on the Foundations of Software Engineering <b>(FSE)</b>.</p>
+            </li>
+            <li>
+                <strong>📜 October 15, 2024</strong><br>
+                <p>Our work titled <b><em>"Detecting Refactoring Commits in Machine Learning Python Projects: A Machine Learning-Based Approach"</em></b> was accepted for The ACM Transactions on Software Engineering and Methodology <b>(TOSEM)</b>.</p>
+            </li>
+            <li>
+                <strong>🏆 February 9, 2024</strong><br>
+                <p>We won the ACM Sigsoft Award to present our work at The International Conference on Software Engineering <b>(ICSE)</b> 2024.</p>
+            </li>
+            <li>
+                <strong>📜 October 10, 2023</strong><br>
+                <p>Our work titled <b><em>"An Empirical Study of Refactoring Rhythms and Tactics in the Software Development Process"</em></b> was accepted for The IEEE Transactions on Software Engineering <b>(TSE)</b>.</p>
+            </li>
+            <li>
+                <strong>🏆 June 11, 2023</strong><br>
+                <p>We won the Best Poster Award for presenting our work <b><em>"Detecting Refactoring Commits in Machine Learning Python Projects: A Machine Learning-Based Approach"</em></b> at The Software Engineering for Machine Learning Applications <b>(SEMLA)</b>.</p>
+            </li>
+            <!-- Add more news items as needed -->
+        </ul>
+    </section>
+
+    <!-- <section class="section">
+        <h2>Resume</h2>
+        <p>
+            <a href="resume.pdf" download="My_Resume.pdf">Download My Resume (PDF)</a>
+        </p>
+    </section> -->
+</main>
+
+<!-- <footer>
+    <p>&copy; 2025 Jane Doe</p>
+</footer> -->
+
+</body>
+</html>
+
