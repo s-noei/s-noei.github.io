@@ -338,11 +338,6 @@
                         venue = e.note || e.howpublished || 'arXiv Preprint';
                     }
 
-                    var labelMap = { article: 'Journal', inproceedings: 'Conference', book: 'Book', misc: 'Preprint', unpublished: 'Preprint' };
-                    var typeLabel = labelMap[e.entryType] || e.entryType;
-                    var typeBadge = '<span style="display:inline-block;padding:1px 8px;border-radius:3px;font-size:0.75em;margin-left:8px;'
-                        + 'background:rgba(88,166,255,0.15);color:#58a6ff;">'
-                        + typeLabel + '</span>';
 
                     var titleText = e.title || 'Untitled';
                     var titleHTML;
@@ -353,7 +348,7 @@
                     }
 
                     html += '<li>';
-                    html += '<span class="date">' + (e.year || 'N/A') + typeBadge + '</span>';
+                    html += '<span class="date">' + (e.year || 'N/A') + '</span>';
                     html += titleHTML + '<br>';
                     html += '<span style="color:#8b949e;">' + (e.author || '') + '</span><br>';
                     html += '<span style="color:#a5d6ff;">' + venue + '</span>';
