@@ -3,184 +3,540 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Font Awesome CDN for Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <title>My Publications and Resume</title>
+    <title>Shayan Noei - Agentic Terminal</title>
     <style>
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #58a6ff;
+            --prompt-color: #3fb950;
+            --accent-color: #ff7b72;
+            --font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
             margin: 0;
             padding: 0;
-            background-color: #e0e0e0;
-            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        header {
-            /* background-color: #3a3a3a;
-            color: #f0f0f0; */
-            text-align: center;
-            padding: 1.5rem;
-            /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b949e; }
+
+        #top-bar {
+            background-color: #161b22;
+            padding: 10px 20px;
+            display: flex;
+            gap: 15px;
+            border-bottom: 1px solid #30363d;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 10;
+            flex-wrap: wrap;
         }
 
-        main {
-            padding: 1.5rem;
+        .btn {
+            background-color: transparent;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 5px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: var(--font-family);
+            font-size: 0.9rem;
+            transition: all 0.2s;
         }
 
-        .section {
-            margin-bottom: 2.5rem;
+        .btn:hover {
+            background-color: #30363d;
+            border-color: #8b949e;
+            color: #ffffff;
+            box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
         }
 
-        h2 {
-            color: #3a3a3a;
-            border-bottom: 2px solid #bbb;
-            padding-bottom: 0.5rem;
-            font-size: 1.5rem;
+        #terminal-container {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
         }
-        .info-box {
-            background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
-            border-radius: 15px; /* Curved corners */
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light shadow */
-            max-width: 600px; /* Adjust the width as needed */
-            margin: 20px auto; /* Center the box */
-            line-height: 1.6;
+
+        #output {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
-        .news-box {
-            background-color: rgba(255, 255, 255, 0.3); /* 50% transparent white */
-            border-radius: 15px; /* Curved corners */
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light shadow */
-            max-width: 600px; /* Adjust the width as needed */
-            margin: 20px auto; /* Center the box */
-            line-height: 1.6;
+
+        .line { line-height: 1.5; word-wrap: break-word; }
+
+        .prompt-line {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+
+        .prompt {
+            color: var(--prompt-color);
+            font-weight: bold;
+            margin-right: 10px;
+            white-space: nowrap;
         }
+
+        #input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            padding-bottom: 40px;
+        }
+
+        #input-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        #command-input {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: var(--font-family);
+            font-size: 1rem;
+            outline: none;
+            width: 100%;
+            caret-color: var(--prompt-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        #ghost-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: var(--font-family);
+            font-size: 1rem;
+            color: #484f58;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 1;
+            line-height: normal;
+        }
+
+        .content-box {
+            border: 1px dashed #30363d;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: rgba(22, 27, 34, 0.5);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .profile-pic {
+            width: 120px;
+            border-radius: 50%;
+            border: 2px solid var(--text-color);
+            filter: grayscale(80%) contrast(1.2);
+            transition: filter 0.3s;
+        }
+        .profile-pic:hover { filter: grayscale(0%); }
+
+        .highlight { color: #f2cc60; }
+        .error { color: var(--accent-color); }
+
+        a { color: #a5d6ff; text-decoration: none; transition: color 0.2s; }
+        a:hover { text-decoration: underline; color: #ffffff; }
+
+        .social-icons a { margin-right: 15px; font-size: 1.2rem; }
+
+        ul { list-style-type: none; padding: 0; margin: 0; }
 
         li {
-            /* background-color: #f5f5f5; */
-            margin: 0.5rem 0;
-            /* padding: 1rem; */
-            /* border: 1px solid #ddd; */
-            border-radius: 8px;
-            /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-            transition: transform 0.2s;
+            margin-bottom: 15px;
+            border-left: 2px solid #3fb950;
+            background-color: rgba(63, 185, 80, 0.05);
+            padding: 10px;
+            border-radius: 0 4px 4px 0;
         }
 
-        li:hover {
-            transform: translateY(-3px);
-            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); */
+        .date { color: #8b949e; font-size: 0.9em; margin-bottom: 5px; display: block; }
+
+        .help-table {
+            display: grid;
+            grid-template-columns: 150px auto;
+            gap: 10px;
+            margin-top: 10px;
         }
 
-        a {
-            text-decoration: none;
-            color: #323030;
+        @media (max-width: 600px) {
+            .profile-container { flex-direction: column; align-items: flex-start; }
+            .help-table { grid-template-columns: 1fr; }
         }
-
-        a:hover {
-            text-decoration: underline;
-            color: #1a73e8;
-        }
-
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            background-color: #3a3a3a;
-            color: #f0f0f0;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        p {
-            font-size: 1rem;
-            color: #666;
-        }
-        img {
-            border-radius: 50%;
-            width: 200px;
-        }
-        .social-icons a:hover {
-            color: #1a73e8;
-        }
-
     </style>
 </head>
 <body>
-<main>
-    <header>
-        <div class="header-content">
-            <img src="shayan-noei.jpg" alt="My Profile Picture">
-            <h3>Shayan Noei</h3>
-            <p>Postdoctoral Fellow, PhD, Queen's University</p>
-            <p>Email: s[dot]noei[at]queensu[dot]ca</p>
-            <p>Kingston, Canada</p>
-        </div>
-        <div class="social-icons">
-            <a href="https://www.linkedin.com/in/5hayan" target="_blank" title="LinkedIn">
-                <i class="fab fa-linkedin"></i>
-            </a>
-            <a href="https://scholar.google.nl/citations?user=VYWka8IAAAAJ&hl=en&oi=ao" target="_blank" title="Google Scholar">
-                <i class="fas fa-graduation-cap"></i>
-            </a>
-        </div>
-        <div class="info-box">
-            <p>My research interests include code maintenance, code refactoring, code generation, LLM-driven development, and release engineering.  
-                <br>If you have an interesting idea or are looking to collaborate, feel free to reach out!</p>
-            
-        </div>
-    </header>
-    <section class="news-box">
-        <h2>News</h2>
-        <ul>
-            <li>
-                <strong>📜 January 19, 2026</strong><br>
-                <p>Our manuscript titled <b><em>"An Empirical Study on the Characteristics of Reusable Code Clones"</em></b> was accepted for <b>ACM Transactions on Software Engineering and Methodology (TOSEM)</b>.</p>
-            </li>
-            <li>
-                <strong>📜 July 1, 2025</strong><br>
-                <p>Our paper titled <b><em>"LLM Driven Code Refactoring: Opportunities and Limitations"</em></b> was published in the <b>2025 IEEE ACM Second IDE Workshop (IDE)</b>, held in Ottawa, Ontario, Canada.</p>
-            </li>
-            <li>
-                <strong>📜 January 14, 2025</strong><br>
-                <p>Our work titled <b><em>"An Empirical Study on Release-Wise Refactoring Patterns"</em></b> was accepted for The ACM International Conference on the Foundations of Software Engineering <b>(FSE)</b>.</p>
-            </li>
-            <li>
-                <strong>📜 October 15, 2024</strong><br>
-                <p>Our work titled <b><em>"Detecting Refactoring Commits in Machine Learning Python Projects: A Machine Learning-Based Approach"</em></b> was accepted for The ACM Transactions on Software Engineering and Methodology <b>(TOSEM)</b>.</p>
-            </li>
-            <li>
-                <strong>🏆 February 9, 2024</strong><br>
-                <p>We won the ACM Sigsoft Award to present our work at The International Conference on Software Engineering <b>(ICSE)</b> 2024.</p>
-            </li>
-            <li>
-                <strong>📜 October 10, 2023</strong><br>
-                <p>Our work titled <b><em>"An Empirical Study of Refactoring Rhythms and Tactics in the Software Development Process"</em></b> was accepted for The IEEE Transactions on Software Engineering <b>(TSE)</b>.</p>
-            </li>
-            <li>
-                <strong>🏆 June 11, 2023</strong><br>
-                <p>We won the Best Poster Award for presenting our work <b><em>"Detecting Refactoring Commits in Machine Learning Python Projects: A Machine Learning-Based Approach"</em></b> at The Software Engineering for Machine Learning Applications <b>(SEMLA)</b>.</p>
-            </li>
-            <!-- Add more news items as needed -->
-        </ul>
-    </section>
 
-    <!-- <section class="section">
-        <h2>Resume</h2>
-        <p>
-            <a href="resume.pdf" download="My_Resume.pdf">Download My Resume (PDF)</a>
-        </p>
-    </section> -->
-</main>
+    <div id="top-bar">
+        <button class="btn" id="btn-about"><i class="fas fa-user-circle"></i> /about</button>
+        <button class="btn" id="btn-publications"><i class="fas fa-book"></i> /publications</button>
+        <button class="btn" id="btn-contact"><i class="fas fa-envelope"></i> /contact</button>
+        <button class="btn" id="btn-clear"><i class="fas fa-eraser"></i> /clear</button>
+    </div>
 
-<!-- <footer>
-    <p>&copy; 2025 Jane Doe</p>
-</footer> -->
+    <div id="terminal-container">
+        <div id="output"></div>
+        <div id="input-line">
+            <span class="prompt">visitor@s-noei.github.io ~$</span>
+            <div id="input-wrapper">
+                <span id="ghost-text"></span>
+                <input type="text" id="command-input" autocomplete="off" spellcheck="false" autofocus>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        (function() {
+            var outputElement = document.getElementById('output');
+            var commandInput = document.getElementById('command-input');
+            var terminalContainer = document.getElementById('terminal-container');
+            var ghostText = document.getElementById('ghost-text');
+
+            var COMMANDS = ['/about', '/publications', '/contact', '/clear', '/help', '/news'];
+            var currentSuggestion = '';
+
+            var DATA = {
+                about: '<div class="content-box">'
+                    + '<div class="profile-container">'
+                    + '<img src="shayan-noei.jpg" alt="Shayan Noei" class="profile-pic">'
+                    + '<div>'
+                    + '<h2 style="margin:0; color: #f2cc60;">Shayan Noei</h2>'
+                    + '<p style="margin: 5px 0; color: #e6edf3;">AI Engineer &amp; Research Scientist | Agentic AI &amp; Software Engineering</p>'
+                    + '<p style="margin: 5px 0; color: #8b949e;">🏛️ <a href="https://seal-queensu.github.io/" target="_blank">SEAL Lab</a>, Queen\'s University · 📍 Kingston, Canada</p>'
+                    + '<div class="social-icons" style="margin-top: 10px;">'
+                    + '<a href="https://www.linkedin.com/in/5hayan" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i> LinkedIn</a>'
+                    + '<a href="https://scholar.google.nl/citations?user=VYWka8IAAAAJ&hl=en&oi=ao" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i> Scholar</a>'
+                    + '</div></div></div>'
+                    + '<h3 style="margin-top: 15px; margin-bottom: 8px; color: #f2cc60;">Research Interests</h3>'
+                    + '<p>'
+                    + '<span class="highlight">SE4AI</span> · <span class="highlight">AI4SE</span> · '
+                    + '<span class="highlight">Empirical AI Engineering</span> · '
+                    + '<span class="highlight">Agentic &amp; Multi-Agent Systems</span> · '
+                    + '<span class="highlight">Foundation Models for Code</span> · '
+                    + '<span class="highlight">Software Evolution</span> · '
+                    + '<span class="highlight">Trustworthy &amp; Scalable AI</span> · '
+                    + '<span class="highlight">Code Refactoring</span>'
+                    + '</p>'
+                    + '<p>If you have an interesting idea or are looking to collaborate, feel free to reach out via <a href="#" class="highlight" style="cursor:pointer; color:#f2cc60;" onclick="executeFromButton(\'/contact\'); return false;">/contact</a>!</p>'
+                    + '</div>',
+
+                publications: '<div class="content-box"><p style="color: #8b949e;"><i>Loading publications from .bib file...</i></p></div>',
+
+
+                contact: '<div class="content-box">'
+                    + '<h3 style="margin-top:0; color: #f2cc60;">Contact Information</h3>'
+                    + '<p>📧 Email: <a href="mailto:s.noei@queensu.ca">s[dot]noei[at]queensu[dot]ca</a></p>'
+                    + '<p>🔗 LinkedIn: <a href="https://www.linkedin.com/in/5hayan" target="_blank">linkedin.com/in/5hayan</a></p>'
+                    + '<p style="margin-top: 15px; color: #8b949e;"><i>[!] Terminal connection open. Awaiting transmission...</i></p>'
+                    + '</div>',
+
+                help: '<div class="content-box">'
+                    + '<h3 style="margin-top:0; color: #f2cc60;">Available Commands</h3>'
+                    + '<div class="help-table">'
+                    + '<span class="highlight">/about</span><span>Display profile and research interests</span>'
+                    + '<span class="highlight">/publications</span><span>List recent papers and awards</span>'
+                    + '<span class="highlight">/contact</span><span>Show contact details</span>'
+                    + '<span class="highlight">/clear</span><span>Clear the terminal output</span>'
+                    + '<span class="highlight">/help</span><span>Show this help message</span>'
+                    + '</div></div>'
+            };
+
+            var WELCOME_HTML = '<div style="margin-bottom: 20px;">'
+                + '<pre style="color: #3fb950; margin:0; font-size: max(0.6rem, 1vw);">'
+                + '   _____ _                             _   _            _  \n'
+                + '  / ____| |                           | \\ | |          (_) \n'
+                + ' | (___ | |__   __ _ _   _ __ _ _ __  |  \\| | ___   ___ _ \n'
+                + '  \\___ \\| \'_ \\ / _` | | | / _` | \'_ \\ | . ` |/ _ \\ / _ \\ |\n'
+                + '  ____) | | | | (_| | |_| | (_| | | | | |\\  | (_) |  __/ |\n'
+                + ' |_____/|_| |_|\\__,_|\\__, |\\__,_|_| |_|_| \\_|\\___/ \\___|_|\n'
+                + '                      __/ |                                \n'
+                + '                     |___/                                 \n'
+                + '</pre>'
+                + '<p style="color: #e6edf3;">Welcome to the Agentic Terminal Interface (ATI v1.0.0).</p>'
+                + '<p>Type <span class="highlight">/help</span> or use the buttons above to get started.</p>'
+                + '</div>';
+
+            var isTyping = false;
+            var publicationsHTML = '';
+
+            // ── BibTeX Parser ──
+            function parseBib(text) {
+                var entries = [];
+                // Match each @type{key, ... } block
+                var regex = /@(\w+)\s*\{([^,]*),([^@]*)\}/g;
+                var match;
+                while ((match = regex.exec(text)) !== null) {
+                    var entryType = match[1].toLowerCase();
+                    var key = match[2].trim();
+                    var body = match[3];
+                    var entry = { entryType: entryType, key: key };
+
+                    // Parse fields
+                    var fieldRegex = /(\w+)\s*=\s*\{([^}]*)\}/g;
+                    var fm;
+                    while ((fm = fieldRegex.exec(body)) !== null) {
+                        entry[fm[1].toLowerCase()] = fm[2].trim();
+                    }
+                    entries.push(entry);
+                }
+                return entries;
+            }
+
+            function renderPublications(entries) {
+                // Sort by year descending
+                entries.sort(function(a, b) {
+                    return (parseInt(a.year) || 0) - (parseInt(b.year) || 0);
+                });
+
+                var html = '<div class="content-box">';
+                html += '<h3 style="margin-top:0; color: #f2cc60;">Publications</h3>';
+                html += '<ul>';
+
+                for (var i = 0; i < entries.length; i++) {
+                    var e = entries[i];
+                    var icon = '📄';
+                    var venue = e.booktitle || e.journal || '';
+
+                    // Detect type from entry or fields
+                    if (e.booktitle) {
+                        icon = '🎤';
+                    } else if (e.journal) {
+                        icon = '📰';
+                    } else if (e.entryType === 'book') {
+                        icon = '📖';
+                        venue = e.publisher || '';
+                    } else if (e.entryType === 'misc' || e.entryType === 'unpublished') {
+                        icon = '📦';
+                        venue = e.note || e.howpublished || 'arXiv Preprint';
+                    }
+
+                    var labelMap = { article: 'Journal', inproceedings: 'Conference', book: 'Book', misc: 'Preprint', unpublished: 'Preprint' };
+                    var typeLabel = labelMap[e.entryType] || e.entryType;
+                    var typeBadge = '<span style="display:inline-block;padding:1px 8px;border-radius:3px;font-size:0.75em;margin-left:8px;'
+                        + 'background:rgba(88,166,255,0.15);color:#58a6ff;">'
+                        + typeLabel + '</span>';
+
+                    var titleText = e.title || 'Untitled';
+                    var titleHTML;
+                    if (e.url) {
+                        titleHTML = '<a href="' + e.url + '" target="_blank" style="color:#e6edf3;"><b><em>"' + titleText + '"</em></b></a>';
+                    } else {
+                        titleHTML = '<b><em>"' + titleText + '"</em></b>';
+                    }
+
+                    html += '<li>';
+                    html += '<span class="date">' + (e.year || 'N/A') + typeBadge + '</span>';
+                    html += titleHTML + '<br>';
+                    html += '<span style="color:#8b949e;">' + (e.author || '') + '</span><br>';
+                    html += '<span style="color:#a5d6ff;">' + venue + '</span>';
+                    html += '</li>';
+                }
+
+                html += '</ul></div>';
+                return html;
+            }
+
+            // Fetch and parse .bib file
+            fetch('publications.bib')
+                .then(function(res) { return res.text(); })
+                .then(function(text) {
+                    var entries = parseBib(text);
+                    publicationsHTML = renderPublications(entries);
+                })
+                .catch(function() {
+                    publicationsHTML = '<div class="content-box"><span class="error">Failed to load publications.bib</span></div>';
+                });
+
+            function printOutput(htmlContent) {
+                var div = document.createElement('div');
+                div.className = 'line';
+                div.innerHTML = htmlContent;
+                outputElement.appendChild(div);
+                scrollToBottom();
+            }
+
+            function printCommandEcho(command) {
+                var div = document.createElement('div');
+                div.className = 'prompt-line';
+                div.innerHTML = '<span class="prompt">visitor@s-noei.github.io ~$</span> <span style="color: #ffffff;">' + escapeHtml(command) + '</span>';
+                outputElement.appendChild(div);
+                scrollToBottom();
+            }
+
+            function escapeHtml(text) {
+                var d = document.createElement('div');
+                d.appendChild(document.createTextNode(text));
+                return d.innerHTML;
+            }
+
+            function scrollToBottom() {
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        terminalContainer.scrollTop = terminalContainer.scrollHeight;
+                    });
+                });
+            }
+
+            function clearTerminal() {
+                outputElement.innerHTML = '';
+            }
+
+            function typeCommand(command) {
+                isTyping = true;
+                commandInput.value = '';
+                commandInput.disabled = true;
+                var i = 0;
+
+                function typeNext() {
+                    if (i < command.length) {
+                        commandInput.value += command[i];
+                        i++;
+                        setTimeout(typeNext, 60);
+                    } else {
+                        setTimeout(function() {
+                            commandInput.disabled = false;
+                            commandInput.value = '';
+                            commandInput.focus();
+                            isTyping = false;
+                            handleCommand(command);
+                        }, 200);
+                    }
+                }
+
+                typeNext();
+            }
+
+            function executeFromButton(command) {
+                if (isTyping) return;
+                if (command === '/clear') {
+                    clearTerminal();
+                    return;
+                }
+                typeCommand(command);
+            }
+            window.executeFromButton = executeFromButton;
+
+            function handleCommand(rawCommand) {
+                var command = rawCommand.trim().toLowerCase();
+                if (command === '') return;
+
+                printCommandEcho(command);
+
+                switch (command) {
+                    case '/about':
+                        printOutput(DATA.about);
+                        break;
+                    case '/publications':
+                    case '/news':
+                        printOutput(publicationsHTML || DATA.publications);
+
+                        break;
+                    case '/contact':
+                        printOutput(DATA.contact);
+                        break;
+                    case '/clear':
+                        clearTerminal();
+                        break;
+                    case '/help':
+                        printOutput(DATA.help);
+                        break;
+                    default:
+                        printOutput('<span class="error">Command not found: ' + escapeHtml(command) + '. Type <span class="highlight">/help</span> for available commands.</span>');
+                }
+            }
+
+            // Autocomplete suggestion logic
+            function updateSuggestion() {
+                var val = commandInput.value;
+                currentSuggestion = '';
+                ghostText.textContent = '';
+
+                if (val.length === 0) return;
+
+                for (var i = 0; i < COMMANDS.length; i++) {
+                    if (COMMANDS[i].indexOf(val.toLowerCase()) === 0 && COMMANDS[i] !== val.toLowerCase()) {
+                        currentSuggestion = COMMANDS[i];
+                        ghostText.textContent = currentSuggestion;
+                        return;
+                    }
+                }
+            }
+
+            commandInput.addEventListener('input', function() {
+                updateSuggestion();
+            });
+
+            // Key handler: Enter to execute, Tab to autocomplete
+            commandInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab' || e.keyCode === 9) {
+                    e.preventDefault();
+                    if (currentSuggestion) {
+                        commandInput.value = currentSuggestion;
+                        currentSuggestion = '';
+                        ghostText.textContent = '';
+                    }
+                }
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    e.preventDefault();
+                    var val = this.value;
+                    this.value = '';
+                    currentSuggestion = '';
+                    ghostText.textContent = '';
+                    handleCommand(val);
+                }
+            });
+
+            // Button click handlers (no inline onclick needed)
+            document.getElementById('btn-about').addEventListener('click', function() { executeFromButton('/about'); });
+            document.getElementById('btn-publications').addEventListener('click', function() { executeFromButton('/publications'); });
+            document.getElementById('btn-contact').addEventListener('click', function() { executeFromButton('/contact'); });
+            document.getElementById('btn-clear').addEventListener('click', function() { executeFromButton('/clear'); });
+
+            // Focus the input when clicking the terminal area (without scrolling)
+            terminalContainer.addEventListener('click', function() {
+                commandInput.focus({ preventScroll: true });
+            });
+
+            // Keep focus on input unless user is selecting text (without scrolling)
+            document.addEventListener('mouseup', function() {
+                if (window.getSelection().toString() === '') {
+                    commandInput.focus({ preventScroll: true });
+                }
+            });
+
+            // Initialize — start with /about
+            handleCommand('/about');
+            commandInput.focus();
+        })();
+    </script>
+    <script data-goatcounter="https://s-noei.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
-
